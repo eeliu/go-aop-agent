@@ -372,7 +372,30 @@ int32_t calcRelativeOffset(BYTE *reg, int32_t size, BYTE *instBaseAddr)
     {
         Inst inst = {0};
         E_RET_TYPE ret = decode(cur, size, &inst, 64, false);
-        if (ret != E_OK || (inst.Len == 1 && (inst.Op == INT || inst.Op == RET)) || (inst.Len == 3 && inst.Op == 0xC2)) // 0xCC -> INT 0xC3/0xC2-> RETN
+        if (ret != E_OK)
+        {
+            break;
+        }
+
+#if DTRACE
+        {
+            char buf[128] = {0};
+            inst_str(&inst, buf, sizeof(buf));
+            LOG_TRACE("pInst:%p inst:{%s},len:%d", cur, buf, inst.Len);
+        }
+#endif
+
+        if (inst.Len == 1 && (inst.Op == INT || inst.Op == RET))
+        {
+            break;
+        }
+
+        if (inst.Len == 2 && inst.Op == JBE) // JBE internal jump
+        {
+            break;
+        }
+
+        if (inst.Len == 3 && inst.Op == 0xC2) // 0xCC -> INT 0xC3/0xC2-> RETN
         {
             break;
         }
@@ -385,7 +408,7 @@ int32_t calcRelativeOffset(BYTE *reg, int32_t size, BYTE *instBaseAddr)
 
             const uintptr_t ofst = inst.PCRelOff;
             const uintptr_t sz = inst.PCRel;
-
+            LOG_TRACE("inst sz:%lu", sz);
             memcpy(&relative, cur + ofst, sz);
 
             int64_t newRel = instBaseAddr + (int64_t)relative - reg; // relative + (instBaseAddr - reg);
@@ -396,7 +419,7 @@ int32_t calcRelativeOffset(BYTE *reg, int32_t size, BYTE *instBaseAddr)
                 return -1;
             }
 
-            LOG_TRACE("origin relative:%x updated relative:%lx ", relative, newRel);
+            LOG_TRACE("origin relative:0x%x updated relative:0x%lx ", relative, newRel);
             memcpy(cur + ofst, &newRel, sz);
         }
         cur += inst.Len;

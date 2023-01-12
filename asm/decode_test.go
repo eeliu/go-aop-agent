@@ -95,6 +95,7 @@ func TestDecodeDoesNotCrash(t *testing.T) {
 		[]byte{},
 		[]byte{0xc5},
 		[]byte{0xc4},
+		
 	}
 	for _, test := range cases {
 		inst, err := Decode([]byte(test), 64) // the only goal is that this line does not panic
@@ -108,6 +109,7 @@ func TestDecodeDoesNotCrash(t *testing.T) {
 func TestDecodeDebug(t *testing.T) {
 	cases := [...][]byte{
 		[]byte{0x64, 0x48, 0x8b, 0x0c, 0x25, 0xf8, 0xff, 0xff, 0xff},
+		[]byte{0x76,0x71},
 	}
 	for _, test := range cases {
 		inst, err := Decode([]byte(test), 64) // the only goal is that this line does not panic
@@ -146,6 +148,7 @@ func Benchmark_C_Decode(b *testing.B) {
 		{0x66, 0xe9, 0x11, 0x22, 0x33, 0x44},
 		{0x65, 0xff, 0x25, 0x11, 0x22, 0x33, 0x44},
 		{0x64, 0x48, 0x8b, 0x0c, 0x25, 0xf8, 0xff, 0xff, 0xff}, //11
+		{0x76,0x71},
 	}
 
 	for i := 0; i < len(codes); i++ {

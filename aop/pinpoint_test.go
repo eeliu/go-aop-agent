@@ -17,6 +17,7 @@
 package aop
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"testing"
@@ -24,11 +25,13 @@ import (
 
 //go:noinline
 func foo(a, b int32) int32 {
+	fmt.Printf(" I'm the place holder")
 	return a + b
 }
 
 //go:noinline
 func foo_tramp(a, b int32) int32 {
+	fmt.Printf(" I'm the place holder")
 	return a + b
 }
 
@@ -136,6 +139,7 @@ type Foo struct {
 
 //go:noinline
 func (f *Foo) output(v int32) int32 {
+	fmt.Printf(" I'm the place holder")
 	f.vi32 = v
 	return f.vi32
 }
@@ -148,6 +152,7 @@ func (f *Foo) outputVString(v string) string {
 
 //go:noinline
 func Foo_output_tramp(f *Foo, v int32) int32 {
+	fmt.Printf(" I'm the place holder")
 	return 0
 }
 
@@ -190,6 +195,7 @@ func TestFooOutputVi32(t *testing.T) {
 
 //go:noinline
 func Foo_outputVString_tramp(f *Foo, v string) string {
+	fmt.Printf(" I'm the place holder")
 	return ""
 }
 
@@ -266,6 +272,7 @@ type Client struct {
 
 //go:noinline
 func newKvImplement() KV {
+	fmt.Printf(" I'm the place holder")
 	return &KVImplement{}
 }
 
@@ -277,6 +284,7 @@ func newKvImplementHook() KV {
 
 //go:noinline
 func newKvImplementTrampoline() KV {
+	fmt.Printf(" I'm the place holder")
 	return nil
 }
 
@@ -300,6 +308,7 @@ const baseStringFooTheMore = baseString + "Foo"
 
 //go:noinline
 func (base *Base) DoSomeThing() string {
+	fmt.Printf(" I'm the place holder")
 	return baseString
 }
 
@@ -314,6 +323,7 @@ func hook_DoSomeThing(base *Base) string {
 
 //go:noinline
 func hook_DoSomeThing_trampoline(base *Base) string {
+	fmt.Printf(" I'm the place holder")
 	return ""
 }
 
@@ -324,6 +334,7 @@ func hook_DoSomeThing_FooBase(foo *FooBase) string {
 
 //go:noinline
 func hook_DoSomeThing_trampoline_FooBase(foo *FooBase) string {
+	fmt.Printf(" I'm the place holder")
 	return ""
 }
 

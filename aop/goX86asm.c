@@ -152,7 +152,7 @@ E_RET_TYPE decode(Reg *src, int len, Inst *ld, int mode, bool gnuCompat)
 {
 	if (src == NULL || ld == NULL || len <= 0)
 	{
-		LOG_TRACE("src:%p ld：%p len:%d", src, ld, len);
+		LOG_TRACE("src:%p ld: %p len:%d", src, ld, len);
 		return E_PARA_INVALID;
 	}
 
